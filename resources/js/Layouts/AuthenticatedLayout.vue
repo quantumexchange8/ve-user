@@ -18,15 +18,15 @@ defineProps({
         class="min-h-screen bg-gray-25"
     >
         <!-- Sidebar -->
-        <!-- <Sidebar /> -->
+        <Sidebar />
 
         <div
             style="transition-property: margin; transition-duration: 150ms"
             :class="[
                 'min-h-screen flex flex-col',
                 {
-                    // 'lg:ml-[252px]': sidebarState.isOpen,
-                    // 'md:ml-0 lg:ml-[84px]': !sidebarState.isOpen,
+                    'lg:ml-[252px]': sidebarState.isOpen,
+                    'md:ml-0 lg:ml-[84px]': !sidebarState.isOpen,
                 },
             ]"
         >

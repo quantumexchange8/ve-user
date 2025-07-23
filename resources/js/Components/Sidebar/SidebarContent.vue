@@ -21,31 +21,32 @@ import {
     IconChartPie,
     IconId,
     IconServerCog,
-    IconSettingsDollar
+    IconSettingsDollar,
+    IconTicket
 } from '@tabler/icons-vue';
 import SidebarCategoryLabel from "@/Components/Sidebar/SidebarCategoryLabel.vue";
 
 const page = usePage();
 const pendingRedemptionCodeRequest = ref(0);
 
-const getPendingCounts = async () => {
-    try {
-        const response = await axios.get('/getPendingCounts');
-        pendingRedemptionCodeRequest.value = response.data.pendingRedemptionCodeRequest
-    } catch (error) {
-        console.error('Error pending counts:', error);
-    }
-};
+// const getPendingCounts = async () => {
+//     try {
+//         const response = await axios.get('/getPendingCounts');
+//         pendingRedemptionCodeRequest.value = response.data.pendingRedemptionCodeRequest
+//     } catch (error) {
+//         console.error('Error pending counts:', error);
+//     }
+// };
 
-onMounted(() => {
-    getPendingCounts();
-})
+// onMounted(() => {
+//     getPendingCounts();
+// })
 
-watchEffect(() => {
-    if (usePage().props.toast !== null) {
-        getPendingCounts();
-    }
-});
+// watchEffect(() => {
+//     if (usePage().props.toast !== null) {
+//         getPendingCounts();
+//     }
+// });
 </script>
 
 <template>
@@ -64,6 +65,17 @@ watchEffect(() => {
         >
             <template #icon>
                 <IconLayoutDashboard :size="20" stroke-width="1.25" />
+            </template>
+        </SidebarLink>
+
+        <!-- Redemption Code Listing -->
+        <SidebarLink
+            :title="$t('public.redemption_code_listing')"
+            :href="route('redemption.redemptionCodeListing')"
+            :active="route().current('redemption.redemptionCodeListing')"
+        >
+            <template #icon>
+                <IconTicket :size="20" stroke-width="1.25" />
             </template>
         </SidebarLink>
     </nav>

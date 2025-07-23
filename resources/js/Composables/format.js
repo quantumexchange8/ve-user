@@ -46,10 +46,10 @@ export function generalFormat() {
     };
 
     function formatSeverity(value) {
-        if (['success', 'verified', 'approved', 'completed'].includes(value)) return 'success';
+        if (['success', 'verified', 'approved', 'completed', 'redeemed'].includes(value)) return 'success';
         if (['danger', 'unverified', 'rejected', 'failed'].includes(value)) return 'danger';
-        if (['warn', 'pending', 'processing'].includes(value)) return 'warn';
-        if (['info'].includes(value)) return 'info';
+        if (['warning', 'pending', 'processing'].includes(value)) return 'warning';
+        if (['info', 'valid'].includes(value)) return 'info';
         if (['contrast'].includes(value)) return 'contrast';
         if (['secondary'].includes(value)) return 'secondary';
         if (['primary'].includes(value)) return 'primary';

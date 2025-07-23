@@ -45,7 +45,7 @@ const handleLogOut = () => {
         aria-label="secondary"
         class="sticky top-0 z-20 py-2 px-3 md:px-5 bg-surface-50 dark:bg-surface-950 flex items-center gap-3 transition-colors duration-200 w-full"
     >
-        <!-- <Button
+        <Button
             type="button"
             severity="secondary"
             rounded
@@ -56,7 +56,7 @@ const handleLogOut = () => {
             <template #icon>
                 <IconMenu2 size="18" stroke-width="1.5" />
             </template>
-        </Button> -->
+        </Button>
 
         <div
             class="font-semibold text-surface-700 dark:text-surface-300 text-nowrap"

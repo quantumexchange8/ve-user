@@ -21,15 +21,17 @@ Route::get('/', function () {
     return redirect(route('login'));
 });
 
-Route::get('/redemption_code_request', function () {
-    return Inertia::render('RedemptionCodeRequest');
-})->middleware(['auth', 'verified'])->name('redemption_code_request');
+Route::get('/redemption_code_request', [RedemptionController::class, 'index'])->middleware(['auth', 'verified'])->name('redemption_code_request');
 
 Route::middleware('auth')->group(function () {
-    Route::prefix('redemption_code_request')->group(function () {
-        Route::get('/getLicenses', [RedemptionController::class, 'getLicenses'])->name('redemption_code_request.getLicenses');
+    Route::prefix('redemption')->group(function () {
+        Route::get('/getRedemptionCodeRequest', [RedemptionController::class, 'getRedemptionCodeRequest'])->name('redemption.getRedemptionCodeRequest');
+        Route::get('/getRedemptionCodes', [RedemptionController::class, 'getRedemptionCodes'])->name('redemption.getRedemptionCodes');
         
-        Route::post('/requestRedemptionCode', [RedemptionController::class, 'requestRedemptionCode'])->name('redemption_code_request.requestRedemptionCode');
+        Route::post('/requestRedemptionCode', [RedemptionController::class, 'requestRedemptionCode'])->name('redemption.requestRedemptionCode');
+
+        Route::get('/redemptionCodeListing', [RedemptionController::class, 'redemptionCodeListing'])->name('redemption.redemptionCodeListing');
+        Route::get('/getRedemptionCodeListing', [RedemptionController::class, 'getRedemptionCodeListing'])->name('redemption.getRedemptionCodeListing');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
