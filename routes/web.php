@@ -21,9 +21,11 @@ Route::get('/', function () {
     return redirect(route('login'));
 });
 
-Route::get('/redemption_code_request', [RedemptionController::class, 'index'])->middleware(['auth', 'verified'])->name('redemption_code_request');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Dashboard
+    Route::get('/redemption_code_request', [RedemptionController::class, 'index'])->name('redemption_code_request');
+
     Route::prefix('redemption')->group(function () {
         Route::get('/getRedemptionCodeRequest', [RedemptionController::class, 'getRedemptionCodeRequest'])->name('redemption.getRedemptionCodeRequest');
         Route::get('/getRedemptionCodes', [RedemptionController::class, 'getRedemptionCodes'])->name('redemption.getRedemptionCodes');
