@@ -202,15 +202,15 @@ watch(() => usePage().props.toast, (toast) => {
     }
 );
 
-const rowClicked = async (data) => {
-    if (!data?.serial_number) return;
+// const rowClicked = async (data) => {
+//     if (!data?.serial_number) return;
 
-    try {
-        await navigator.clipboard.writeText(data.serial_number);
-    } catch (err) {
-        console.error('Failed to copy serial number', err);
-    }
-};
+//     try {
+//         await navigator.clipboard.writeText(data.serial_number);
+//     } catch (err) {
+//         console.error('Failed to copy serial number', err);
+//     }
+// };
 
 </script>
 
@@ -233,7 +233,6 @@ const rowClicked = async (data) => {
                 selectionMode="single"
                 :totalRecords="totalRecords"
                 :loading="isLoading"
-                @row-click="rowClicked($event.data)"
                 @page="onPage($event)"
                 @sort="onSort($event)"
                 @filter="onFilter($event)"
