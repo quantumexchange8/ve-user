@@ -350,6 +350,15 @@ const rowClicked = async (rowData) => {
                         </div>
                     </template>
                 </Column>
+                <Column field="name" :header="$t('public.name')" headerClass="text-nowrap" />
+                <Column field="meta_login" :header="$t('public.meta_login')" headerClass="text-nowrap" />
+                <Column field="products" :header="$t('public.products')">
+                    <template #body="{ data }">
+                        <span>
+                            {{ data.products?.map(p => p.label).join(', ') }}
+                        </span>
+                    </template>
+                </Column>
                 <Column
                     field="expired_date"
                     sortable
@@ -359,15 +368,6 @@ const rowClicked = async (rowData) => {
                 >
                     <template #body="{ data }">
                         {{ data.expired_date ? dayjs(data.expired_date).format('YYYY-MM-DD') : '-' }}
-                    </template>
-                </Column>
-                <Column field="name" :header="$t('public.name')" headerClass="text-nowrap" />
-                <Column field="meta_login" :header="$t('public.meta_login')" headerClass="text-nowrap" />
-                <Column field="products" :header="$t('public.products')">
-                    <template #body="{ data }">
-                        <span>
-                            {{ data.products?.map(p => p.label).join(', ') }}
-                        </span>
                     </template>
                 </Column>
                 <Column field="status" :header="$t('public.status')" headerClass="text-nowrap" bodyClass="text-nowrap">
