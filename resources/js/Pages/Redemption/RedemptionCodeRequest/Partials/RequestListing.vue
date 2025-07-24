@@ -203,16 +203,18 @@ watch(() => usePage().props.toast, (toast) => {
 
 // Dialog
 const visible = ref(false);
+const data = ref(null);
 const requestData = ref(null);
 
-const rowClicked = async (data) => {
-    if (data.status !== 'approved') return;
+const rowClicked = async (rowData) => {
+    data.value = rowData
+    if (rowData.status !== 'approved') return;
 
     try {
         const response = await axios.get(route('redemption.getRedemptionCodes'), {
             params: {
-                name: data.name,
-                meta_login: data.meta_login
+                name: rowData.name,
+                meta_login: rowData.meta_login
             }
         });
 
@@ -333,7 +335,7 @@ const rowClicked = async (data) => {
                 <Column
                     field="created_at"
                     sortable
-                    class="table-cell min-w-36"
+                    class="table-cell"
                     :header="$t('public.date')"
                     headerClass="text-nowrap"
                 >
@@ -349,21 +351,14 @@ const rowClicked = async (data) => {
                     </template>
                 </Column>
                 <Column
-                    field="approved_at"
+                    field="expired_date"
                     sortable
-                    class="table-cell min-w-36"
-                    :header="$t('public.approval_date')"
+                    class="table-cell"
+                    :header="$t('public.expired_date')"
                     headerClass="text-nowrap"
                 >
                     <template #body="{ data }">
-                        <div>
-                            <div>
-                                {{ data.approved_at ? dayjs(data.approved_at).format('YYYY-MM-DD') : '-' }}
-                            </div>
-                            <div class="text-xs text-surface-500">
-                                {{ data.approved_at ? dayjs(data.approved_at).format('HH:mm:ss') : '' }}
-                            </div>
-                        </div>
+                        {{ data.expired_date ? dayjs(data.expired_date).format('YYYY-MM-DD') : '-' }}
                     </template>
                 </Column>
                 <Column field="name" :header="$t('public.name')" headerClass="text-nowrap" />
@@ -446,16 +441,29 @@ const rowClicked = async (data) => {
             class="dialog-xs md:dialog-lg"
         >
             <div class="flex flex-col gap-3">
-                <div
-                    v-for="(item, index) in requestData"
-                    :key="index"
-                    class="flex flex-col gap-2"
-                >
-                <div class="text-sm">
-                    {{ $t('public.product') }} : <span class="font-medium">{{ item.product_name }}</span>
+                <div class="flex flex-col gap-3">
+                    <div
+                        v-for="(item, index) in requestData"
+                        :key="index"
+                        class="flex flex-col gap-2"
+                    >
+                        <div class="text-sm">
+                            {{ $t('public.product') }} :
+                            <span class="font-medium">{{ item.product_name }}</span>
+                        </div>
+                        <div class="text-sm font-semibold break-words">
+                            {{ item.serial_number }}
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            {{ $t('public.expired_date') }} :
+                            <span class="font-medium">{{ item.expired_date || '-' }}</span>
+                        </div>
+                    </div>
                 </div>
-                    <div class="text-sm font-semibold break-words">
-                        {{ item.serial_number }}
+                <div class="flex flex-col py-2 gap-1 border-t">
+                    <div class="text-sm">{{ $t('public.remarks') }} :</div>
+                    <div class="text-sm font-medium break-words">
+                        {{ data?.remarks }}
                     </div>
                 </div>
             </div>

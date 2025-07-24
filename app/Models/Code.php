@@ -16,10 +16,4 @@ class Code extends Model
         'expired_date',
         'status',
     ];
-
-    protected $casts = [
-        'expired_date' => 'datetime',
-    ];
-
-    
 }
