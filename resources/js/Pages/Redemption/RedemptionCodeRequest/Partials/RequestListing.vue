@@ -454,16 +454,17 @@ const rowClicked = async (rowData) => {
                         <div class="text-sm font-semibold break-words">
                             {{ item.serial_number }}
                         </div>
-                        <div class="text-sm text-gray-600">
-                            {{ $t('public.expired_date') }} :
-                            <span class="font-medium">{{ item.expired_date || '-' }}</span>
-                        </div>
                     </div>
                 </div>
                 <div class="flex flex-col py-2 gap-1 border-t">
-                    <div class="text-sm">{{ $t('public.remarks') }} :</div>
-                    <div class="text-sm font-medium break-words">
-                        {{ data?.remarks }}
+                    <div class="flex gap-1 text-sm text-gray-600">
+                        {{ $t('public.expired_date') }} :<span class="font-medium">{{ data.expired_date || '-' }}</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="text-sm">{{ $t('public.remarks') }} :</div>
+                        <div class="text-sm font-medium break-words">
+                            {{ data?.remarks }}
+                        </div>
                     </div>
                 </div>
             </div>
