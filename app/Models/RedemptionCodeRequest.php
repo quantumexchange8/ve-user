@@ -13,6 +13,11 @@ class RedemptionCodeRequest extends Model
 
     protected $dates = ['approved_at'];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    
     public function items()
     {
         return $this->hasMany(RedemptionCodeRequestItem::class);

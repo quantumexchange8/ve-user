@@ -1,3 +1,3 @@
 <template>
-    <img src="/img/VE-logo.png" alt="VE-icon">
+    <img src="/VE-logo.png" alt="VE-icon">
 </template>

@@ -14,6 +14,12 @@ class SettingLicense extends Model
         'slug',
         'url',
         'category',
+        'type',
         'valid_year',
     ];
+
+    public function versionControls()
+    {
+        return $this->hasMany(VersionControl::class, 'setting_license_id', 'id');
+    }
 }

@@ -47,7 +47,7 @@ const selectedProducts = ref([]);
 
                     <!-- Name -->
                     <div class="flex flex-col justify-center gap-1">
-                        <InputLabel for="name" :value="$t('public.name')" :invalid="!!form.errors.name" />
+                        <InputLabel for="name" :value="`${$t('public.full_name_ic')}:`" :invalid="!!form.errors.name" />
                         <InputText
                             id="name"
                             v-model="form.name"
@@ -60,7 +60,7 @@ const selectedProducts = ref([]);
 
                     <!-- Meta Login -->
                     <div class="flex flex-col justify-center gap-1">
-                        <InputLabel for="meta_login" :value="$t('public.meta_login')" :invalid="!!form.errors.meta_login" />
+                        <InputLabel for="meta_login" :value="`${$t('public.tradehall_mt5_login_id')}:`" :invalid="!!form.errors.meta_login" />
                         <InputText
                             id="meta_login"
                             v-model="form.meta_login"
@@ -73,7 +73,7 @@ const selectedProducts = ref([]);
 
                     <!-- Product -->
                     <div class="flex flex-col justify-center gap-1">
-                        <InputLabel for="products" value="Products" :invalid="!!form.errors.product_ids" />
+                        <InputLabel for="products" :value="$t('public.indicators_ea')" :invalid="!!form.errors.product_ids" />
                         <MultiSelect
                             v-model="selectedProducts"
                             :options="licenses"

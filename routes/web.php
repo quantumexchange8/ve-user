@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\PendingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VersionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RedemptionController;
 
@@ -36,6 +37,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/getRedemptionCodeListing', [RedemptionController::class, 'getRedemptionCodeListing'])->name('redemption.getRedemptionCodeListing');
     });
 
+    /**
+     * ==============================
+     *        Version Control
+     * ==============================
+     */
+    Route::prefix('version')->group(function () {
+        Route::get('/', [VersionController::class, 'index'])->name('version');
+        Route::get('/getVersionHistory', [VersionController::class, 'getVersionHistory'])->name('version.getVersionHistory');
+    });
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

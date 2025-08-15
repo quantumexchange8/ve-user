@@ -8,7 +8,9 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\SettingLicense;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use App\Models\RedemptionCodeRequest;
+use App\Mail\RedemptionCodeRequestMail;
 use Illuminate\Support\Facades\Validator;
 
 class RedemptionController extends Controller
@@ -55,6 +57,9 @@ class RedemptionController extends Controller
                 'setting_license_id' => $licenseId,
             ]);
         }
+    
+        // ✅ Send the plain text email
+        Mail::to('supporteam@simmigoh.info')->send(new RedemptionCodeRequestMail( $record));
     
         return back()->with('toast', [
             'title' => trans('public.toast_redemption_code_request_success'),
@@ -139,11 +144,13 @@ class RedemptionController extends Controller
 
     public function getRedemptionCodes(Request $request)
     {
+        $request_id = $request->input('request_id');
         $name = $request->input('name');
         $metaLogin = $request->input('meta_login');
 
         $codes = Code::query()
             ->where('user_id', Auth::id())
+            ->where('redemption_code_request_id', $request_id)
             ->where('acc_name', $name)
             ->where('meta_login', $metaLogin)
             ->get();
@@ -164,9 +171,9 @@ class RedemptionController extends Controller
         if ($request->has('lazyEvent')) {
             $data = json_decode($request->only(['lazyEvent'])['lazyEvent'], true);
     
-            $query = Code::query()
+            $query = Code::with(['license:slug,url'])
                 ->where('user_id', Auth::id());
-            
+                    
             // Handle search
             $search = $data['filters']['global']['value'] ?? null;
             if ($search) {
@@ -208,6 +215,12 @@ class RedemptionController extends Controller
             // Handle pagination
             $rowsPerPage = $data['rows'] ?? 15;
             $result = $query->paginate($rowsPerPage);
+
+            foreach ($result as $code) {
+                $code->indicator = $code->license->url ?? null;
+
+                unset($code->license);
+            }            
         }
     
         return response()->json([

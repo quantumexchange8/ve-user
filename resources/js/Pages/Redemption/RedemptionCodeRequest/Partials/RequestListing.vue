@@ -213,6 +213,7 @@ const rowClicked = async (rowData) => {
     try {
         const response = await axios.get(route('redemption.getRedemptionCodes'), {
             params: {
+                request_id: rowData.id,
                 name: rowData.name,
                 meta_login: rowData.meta_login
             }

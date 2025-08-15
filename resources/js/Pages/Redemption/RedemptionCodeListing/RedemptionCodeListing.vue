@@ -355,6 +355,23 @@ watch(() => usePage().props.toast, (toast) => {
                             <Tag :value="$t(`public.${data.status}`)" :severity="formatSeverity(data.status)" />
                         </template>
                     </Column>
+                    <Column field="indicator" :header="$t('public.indicators_ea')">
+                        <template #body="{ data }">
+                            <template v-if="data.status === 'redeemed'">
+                                <a 
+                                    :href="data.indicator" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-blue-500 underline"
+                                >
+                                    {{ data.indicator }}
+                                </a>
+                            </template>
+                            <template v-else>
+                                {{ data.indicator }}
+                            </template>
+                        </template>
+                    </Column>
                     <Column field="serial_number" :header="$t('public.serial_number')" />
                 </template>
             </DataTable>

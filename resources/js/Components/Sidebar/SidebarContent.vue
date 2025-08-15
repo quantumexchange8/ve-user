@@ -78,5 +78,17 @@ const pendingRedemptionCodeRequest = ref(0);
                 <IconTicket :size="20" stroke-width="1.25" />
             </template>
         </SidebarLink>
+
+        <!-- Version Control -->
+        <SidebarLink
+            :title="$t('public.version')"
+            :href="route('version')"
+            :active="route().current('version')"
+        >
+            <template #icon>
+                <IconClipboardData :size="20" stroke-width="1.25" />
+            </template>
+        </SidebarLink>
+
     </nav>
 </template>
