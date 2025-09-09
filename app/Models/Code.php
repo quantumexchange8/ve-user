@@ -17,6 +17,7 @@ class Code extends Model
         'acc_name',
         'license_name',
         'product_name',
+        'version',
         'serial_number',
         'expired_date',
         'status',
@@ -32,5 +33,11 @@ class Code extends Model
     public function license()
     {
         return $this->belongsTo(SettingLicense::class, 'license_name', 'slug');
+    }
+
+    public function getVersionControlAttribute()
+    {
+        // Use the eager loaded collection instead of running a new query
+        return $this->license ? $this->license->versionControls->firstWhere('version', $this->version) : null;
     }
 }

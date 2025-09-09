@@ -63,6 +63,7 @@ return [
     "select_product" => "Select Product",
     "products_selected" => "products selected",
     "expired_date" => "Expired Date",
+    "filter_by_expired_date" => "Filter By Expired Date",
     "select_expiry_date" => "Select expiry date",
     "approval_date" => "Approval Date",
     "serial_number" => "Serial Number",

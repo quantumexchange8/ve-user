@@ -47,6 +47,8 @@ const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   start_date: { value: null, matchMode: FilterMatchMode.EQUALS },
   end_date: { value: null, matchMode: FilterMatchMode.EQUALS },
+//   expired_start_date: { value: null, matchMode: FilterMatchMode.EQUALS },
+//   expired_end_date: { value: null, matchMode: FilterMatchMode.EQUALS },
   status: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
@@ -58,12 +60,18 @@ watch(filters, debounce(() => {
     //     return;
     // }
 
+    // const { start_date, end_date, expired_start_date, expired_end_date } = filters.value;
     const { start_date, end_date } = filters.value;
     const start = start_date?.value;
     const end = end_date?.value;
+    // const expStart = expired_start_date?.value;
+    // const expEnd = expired_end_date?.value;
 
-    // Skip if only one date is filled
+    // Skip if only one date is filled for created_at
     if ((start && !end) || (!start && end)) return;
+
+    // Skip if only one date is filled for expired_date
+    // if ((expStart && !expEnd) || (!expStart && expEnd)) return;
 
     first.value = 0;
     loadLazyData();
@@ -150,10 +158,15 @@ onMounted(() => {
 });
 
 const selectedDate = ref([]);
+// const selectedExpiredDate = ref([]);
 
 const clearDate = () => {
     selectedDate.value = [];
 };
+
+// const clearExpiredDate = () => {
+//     selectedExpiredDate.value = [];
+// };
 
 watch(selectedDate, (newDateRange) => {
     if(Array.isArray(newDateRange)) {
@@ -168,6 +181,20 @@ watch(selectedDate, (newDateRange) => {
         console.warn('Invalid date range format:', newDateRange);
     }
 });
+
+// watch(selectedExpiredDate, (newExpiredDateRange) => {
+//     if(Array.isArray(newExpiredDateRange)) {
+//         const [startExpiredDate, endExpiredDate] = newExpiredDateRange; 
+//         filters.value['expired_start_date'].value = startExpiredDate;
+//         filters.value['expired_end_date'].value = endExpiredDate;
+
+//         if(startExpiredDate !== null && endExpiredDate !== null){
+//             // loadLazyData();
+//         }
+//     } else {
+//         console.warn('Invalid date range format:', newExpiredDateRange);
+//     }
+// });
 
 //filter status
 const status = ref(['valid', 'redeemed']);
@@ -187,12 +214,16 @@ const clearFilterGlobal = () => {
 }
 
 const clearFilter = () => {
-    filters.value['global'].value = null;
-    filters.value['start_date'].value = null;
-    filters.value['end_date'].value = null;
-    filters.value['status'].value = null;
-    selectedDate.value = [];
-};
+  filters.value['global'].value = null
+  filters.value['start_date'].value = null
+  filters.value['end_date'].value = null
+//   filters.value['expired_start_date'].value = null
+//   filters.value['expired_end_date'].value = null
+  filters.value['status'].value = null
+
+  selectedDate.value = []
+//   selectedExpiredDate.value = []
+}
 
 watch(() => usePage().props.toast, (toast) => {
         if (toast !== null) {
@@ -355,20 +386,20 @@ watch(() => usePage().props.toast, (toast) => {
                             <Tag :value="$t(`public.${data.status}`)" :severity="formatSeverity(data.status)" />
                         </template>
                     </Column>
-                    <Column field="indicator" :header="$t('public.indicators_ea')">
+                    <Column field="product_display" :header="$t('public.indicators_ea')">
                         <template #body="{ data }">
-                            <template v-if="data.status === 'redeemed'">
+                            <template v-if="data.status === 'redeemed' && data.url">
                                 <a 
-                                    :href="data.indicator" 
+                                    :href="data.url" 
                                     target="_blank" 
                                     rel="noopener noreferrer" 
                                     class="text-blue-500 underline"
                                 >
-                                    {{ data.indicator }}
+                                    {{ data.product_display }}
                                 </a>
                             </template>
                             <template v-else>
-                                {{ data.indicator }}
+                                {{ data.product_display }}
                             </template>
                         </template>
                     </Column>
@@ -400,6 +431,29 @@ watch(() => usePage().props.toast, (toast) => {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Filter Expired Date -->
+                    <!-- <div class="flex flex-col gap-2 items-center self-stretch">
+                        <div class="flex self-stretch text-sm text-surface-950">
+                            {{ $t('public.filter_by_expired_date') }}
+                        </div>
+                        <div class="relative w-full">
+                            <DatePicker
+                                v-model="selectedExpiredDate"
+                                dateFormat="dd/mm/yy"
+                                selectionMode="range"
+                                placeholder="dd/mm/yyyy - dd/mm/yyyy"
+                                class="w-full"
+                            />
+                            <div
+                                v-if="selectedExpiredDate && selectedExpiredDate.length > 0"
+                                class="absolute top-2/4 -mt-2 right-2 text-surface-400 select-none cursor-pointer bg-transparent"
+                                @click="clearExpiredDate"
+                            >
+                                <IconX :size="15" strokeWidth="1.5"/>
+                            </div>
+                        </div>
+                    </div> -->
 
                     <!-- Filter status -->
                     <div class="flex flex-col gap-2 items-center self-stretch">

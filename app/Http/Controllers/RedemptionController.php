@@ -171,56 +171,66 @@ class RedemptionController extends Controller
         if ($request->has('lazyEvent')) {
             $data = json_decode($request->only(['lazyEvent'])['lazyEvent'], true);
     
-            $query = Code::with(['license:slug,url'])
-                ->where('user_id', Auth::id());
-                    
+            // $query = Code::with(['license.versionControls']) // eager load correctly
+            //     ->where('user_id', Auth::id());
+
+            $query = Code::query()
+                ->leftJoin('setting_licenses', 'codes.license_name', '=', 'setting_licenses.slug')
+                ->leftJoin('version_controls', function ($join) {
+                    $join->on('setting_licenses.id', '=', 'version_controls.setting_license_id')
+                         ->on('codes.version', '=', 'version_controls.version');
+                })
+                ->where('codes.user_id', Auth::id())
+                ->select([
+                    'codes.*',
+                    'version_controls.download_url as vc_download_url',
+                ]);
+    
             // Handle search
             $search = $data['filters']['global']['value'] ?? null;
             if ($search) {
                 $query->where(function ($query) use ($search) {
-                    $query->where('meta_login', 'like', '%' . $search . '%')
-                          ->orWhere('acc_name', 'like', '%' . $search . '%')
-                          ->orWhere('product_name', 'like', '%' . $search . '%')
-                          ->orWhere('serial_number', 'like', '%' . $search . '%');
+                    $query->where('codes.meta_login', 'like', '%' . $search . '%')
+                          ->orWhere('codes.acc_name', 'like', '%' . $search . '%')
+                          ->orWhere('codes.product_name', 'like', '%' . $search . '%')
+                          ->orWhere('codes.serial_number', 'like', '%' . $search . '%');
                 });
             }
-
+    
+            // Handle Date
             $startDate = $data['filters']['start_date']['value'] ?? null;
             $endDate = $data['filters']['end_date']['value'] ?? null;
-
-            // Handle Date
             if ($startDate && $endDate) {
                 $start_date = Carbon::parse($startDate)->startOfDay();
                 $end_date = Carbon::parse($endDate)->endOfDay();
-                
-                $query->whereBetween('created_at', [$start_date, $end_date]);
+                $query->whereBetween('codes.created_at', [$start_date, $end_date]);
             }
-
+    
             // Handle status
             $status = $data['filters']['status']['value'] ?? null;
             if ($status) {
-                $query->where(function ($query) use ($status) {
-                    $query->where('status', $status);
-                });
+                $query->where('codes.status', $status);
             }
-            
+    
             // Handle sorting
             if (!empty($data['sortField']) && !empty($data['sortOrder'])) {
                 $order = $data['sortOrder'] == 1 ? 'asc' : 'desc';
-                $query->orderBy($data['sortField'], $order);
+                $query->orderBy('codes.' . $data['sortField'], $order);
             } else {
-                $query->orderByDesc('created_at');
+                $query->orderByDesc('codes.created_at');
             }
     
             // Handle pagination
             $rowsPerPage = $data['rows'] ?? 15;
             $result = $query->paginate($rowsPerPage);
-
+    
+            // Post-process results
             foreach ($result as $code) {
-                $code->indicator = $code->license->url ?? null;
-
-                unset($code->license);
-            }            
+                $code->url = $code->vc_download_url ?? null;
+                $code->product_display = $code->version ? $code->product_name . ' ' . $code->version : $code->product_name;
+    
+                unset($code->vc_download_url);
+            }
         }
     
         return response()->json([
@@ -228,5 +238,4 @@ class RedemptionController extends Controller
             'data' => $result,
         ]);
     }
-
-}
+    }

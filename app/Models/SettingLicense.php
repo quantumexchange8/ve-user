@@ -22,4 +22,9 @@ class SettingLicense extends Model
     {
         return $this->hasMany(VersionControl::class, 'setting_license_id', 'id');
     }
+
+    public function latestVersion()
+    {
+        return $this->hasOne(VersionControl::class, 'setting_license_id', 'id')->latestOfMany();
+    }
 }
